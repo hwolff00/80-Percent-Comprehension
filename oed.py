@@ -30,7 +30,7 @@ def filter(phrase):
 with open(csv_name, 'a') as file:
     writer = csv.writer(file)
     for word in word_lst:
-        app_key = '64e2457a-a126-4275-8624-13ca87eec294'
+        app_key = #fill in your app key here
         query = word
 
 
