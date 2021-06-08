@@ -34,11 +34,6 @@ def filter(phrase):
 with open(csv_name, 'a') as file:
     writer = csv.writer(file)
     for word in word_lst:
-<<<<<<< HEAD
-        app_key = #fill in your app key here
-=======
-        # app_key = os.environ["od"]
->>>>>>> e575472 (Added .gitignore file and fixed security issue in oed.py)
         query = word
 
 
