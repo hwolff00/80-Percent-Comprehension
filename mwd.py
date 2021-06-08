@@ -35,8 +35,6 @@ with open(csv_name, 'a') as file:
     writer = csv.writer(file)
     for word in word_lst:
         query = word
-
-
         url = 'https://www.dictionaryapi.com/api/v3/references/learners/json/' + word + '?key=' + app_key
 
         try:
