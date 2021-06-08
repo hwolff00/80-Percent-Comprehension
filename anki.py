@@ -47,10 +47,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# with open(file, newline='') as csvfile:
-#     line = csv.reader(csvfile, quotechar='|')
-#     for line in csvfile:
-#         lis= line.split(",")
-#         print(lis[0], lis[2])
