@@ -2,13 +2,18 @@ import genanki
 import random
 import csv
 
+#-------------------------------------------------------------------------------
+# Fill out this section
 file = "Alice/Alice_vocab.csv"
 Deck_name = "Alice"
+#-------------------------------------------------------------------------------
+
+# Create unique ID for deck
 Deck_id = random.randrange(1 << 30, 1 << 31)
-ct = 1
 
 def main():
     ct = 1
+    # Initiate deck
     my_deck = genanki.Deck(
      Deck_id,
      Deck_name)
@@ -21,6 +26,7 @@ def main():
             pos = lis[1]
             definition = lis[2]
 
+            # Initiate model for deck notecard
             my_model = genanki.Model(
               random.randrange(1 << 30, 1 << 31),
               'Simple Model',
@@ -36,6 +42,7 @@ def main():
                 },
               ])
 
+            # Initiate notecard
             my_note = genanki.Note(
               model=my_model,
               fields=['{}: {}'.format(word, pos), '{}'.format(definition)])
