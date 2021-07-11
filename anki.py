@@ -4,19 +4,19 @@ import csv
 
 #-------------------------------------------------------------------------------
 # Fill out this section
-file = "Alice/Alice_vocab.csv"
-Deck_name = "Alice"
+file = "DDIA.csv"
+deck_name = "DDIA"
 #-------------------------------------------------------------------------------
 
 # Create unique ID for deck
-Deck_id = random.randrange(1 << 30, 1 << 31)
+deck_id = random.randrange(1 << 30, 1 << 31)
 
 def main():
     ct = 1
     # Initiate deck
     my_deck = genanki.Deck(
-     Deck_id,
-     Deck_name)
+     deck_id,
+     deck_name)
 
     with open(file, newline='') as csvfile:
         line = csv.reader(csvfile, quotechar='|')
@@ -50,7 +50,7 @@ def main():
             my_deck.add_note(my_note)
             ct += 1
 
-    genanki.Package(my_deck).write_to_file('{}.apkg'.format(Deck_name))
+    genanki.Package(my_deck).write_to_file('{}.apkg'.format(deck_name))
 
 if __name__ == "__main__":
     main()
