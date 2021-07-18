@@ -4,13 +4,21 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+import os
 
 #-------------------------------------------------------------------------------
 # Fill in this section
 web_address = "https://www.gutenberg.org/files/1260/1260-h/1260-h.htm"
-unfilted_csv = "Jane.csv"
-filted_csv = "Jane_filtered.csv"
+name = "Jane"
+# unfilted_csv = "Jane.csv"
+# filted_csv = "Jane_filtered.csv"
 #-------------------------------------------------------------------------------
+def make_dir():
+    parent = os.path.dirname(os.getcwd())
+    path = os.path.join(parent, name)
+    if not os.path.exists(path):
+        os.mkdir(os.path.join(path))
+    return path
 
 def filter(word):
     if word.endswith('ies') or word.endswith('ied'):
@@ -68,12 +76,15 @@ def create_dicts():
 
     return word_dic, filtered_word_dic
 
-def dict_to_csv(word_dic, filtered_word_dic):
+def dict_to_csv(word_dic, filtered_word_dic, path):
     series = pd.Series(word_dic).to_frame()
-    pd.DataFrame(series).to_csv(unfilted_csv)
+    pd.DataFrame(series).to_csv(f'{path}/{name}.csv')
     filtered_series = pd.Series(filtered_word_dic).to_frame()
-    pd.DataFrame(filtered_series).to_csv(filted_csv)
+    pd.DataFrame(filtered_series).to_csv(f'{path}/{name}_filtered.csv')
 
 if __name__ == "__main__":
+    make_dir()
+    path = make_dir()
+    print(path)
     word_dic, filtered_word_dic = create_dicts()
-    dict_to_csv(word_dic, filtered_word_dic)
+    dict_to_csv(word_dic, filtered_word_dic, path)
