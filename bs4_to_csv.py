@@ -7,9 +7,9 @@ import pandas as pd
 
 #-------------------------------------------------------------------------------
 # Fill in this section
-web_address = "https://www.gutenberg.org/files/100/100-h/100-h.htm"
-unfilted_csv = "Shakespeare.csv"
-filted_csv = "Shakespeare_filtered.csv"
+web_address = "https://www.gutenberg.org/files/1260/1260-h/1260-h.htm"
+unfilted_csv = "Jane.csv"
+filted_csv = "Jane_filtered.csv"
 #-------------------------------------------------------------------------------
 
 def filter(word):
@@ -38,36 +38,42 @@ def filter(word):
         return word
 
 # Uses requests to read the html and beautiful soup to parse it
-source = requests.get(web_address).text
-soup = BeautifulSoup(source, "lxml")
+def create_dicts():
+    source = requests.get(web_address).text
+    soup = BeautifulSoup(source, "lxml")
 
-matches = soup.find_all('p')
+    matches = soup.find_all('p')
 
-word_dic = {}
-filtered_word_dic = {}
-word_lst = []
-for match in matches:
-    #print(tag)
-    m = match.text
-    word_lst = re.findall("[\w]+", m) #creates filtered word dicionary
-    for word in word_lst:
-        word = word.replace("-_;:", "").strip()
-        filtered_word = filter(word)
-        filtered_word = filtered_word.capitalize()
-        if filtered_word == "":
-            continue
-        filtered_word_dic[filtered_word] = filtered_word_dic.get(filtered_word, 0) + 1
+    word_dic = {}
+    filtered_word_dic = {}
+    word_lst = []
+    for match in matches:
+        #print(tag)
+        m = match.text
+        word_lst = re.findall("[\w]+", m) #creates filtered word dicionary
+        for word in word_lst:
+            word = word.replace("-_;:", "").strip()
+            filtered_word = filter(word)
+            filtered_word = filtered_word.capitalize()
+            if filtered_word == "":
+                continue
+            filtered_word_dic[filtered_word] = filtered_word_dic.get(filtered_word, 0) + 1
 
-    for word in word_lst: #creates unfiltered word dictionary
-        word = word.replace("-_;:", "").strip()
-        word = word.capitalize()
-        if word == "" or word.endswith('Â'):
-            continue
-        word_dic[word] = word_dic.get(word, 0) + 1
+        for word in word_lst: #creates unfiltered word dictionary
+            word = word.replace("-_;:", "").strip()
+            word = word.capitalize()
+            if word == "" or word.endswith('Â'):
+                continue
+            word_dic[word] = word_dic.get(word, 0) + 1
 
-print(filtered_word_dic)
+    return word_dic, filtered_word_dic
 
-series = pd.Series(word_dic).to_frame()
-pd.DataFrame(series).to_csv(unfilted_csv)
-filtered_series = pd.Series(filtered_word_dic).to_frame()
-pd.DataFrame(filtered_series).to_csv(filted_csv)
+def dict_to_csv(word_dic, filtered_word_dic):
+    series = pd.Series(word_dic).to_frame()
+    pd.DataFrame(series).to_csv(unfilted_csv)
+    filtered_series = pd.Series(filtered_word_dic).to_frame()
+    pd.DataFrame(filtered_series).to_csv(filted_csv)
+
+if __name__ == "__main__":
+    word_dic, filtered_word_dic = create_dicts()
+    dict_to_csv(word_dic, filtered_word_dic)
