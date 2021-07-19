@@ -5,18 +5,13 @@ from bs4 import BeautifulSoup
 import re
 import pandas as pd
 import os
+from make_dir import create_dir
 
 #-------------------------------------------------------------------------------
 # Fill in this section
 web_address = "https://www.gutenberg.org/files/1260/1260-h/1260-h.htm"
 name = "Jane"
 #-------------------------------------------------------------------------------
-def make_dir(name):
-    parent = os.path.dirname(os.getcwd())
-    path = os.path.join(parent, name)
-    if not os.path.exists(path):
-        os.mkdir(os.path.join(path))
-    return path
 
 def filter(word):
     if word.endswith('ies') or word.endswith('ied'):
@@ -81,8 +76,8 @@ def dict_to_csv(word_dic, filtered_word_dic, path):
     pd.DataFrame(filtered_series).to_csv(f'{path}/{name}_filtered.csv')
 
 if __name__ == "__main__":
-    make_dir(name)
-    path = make_dir(name)
+    create_dir(name)
+    path = create_dir(name)
     # print(path)
     word_dic, filtered_word_dic = create_dicts()
     dict_to_csv(word_dic, filtered_word_dic, path)

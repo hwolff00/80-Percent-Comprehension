@@ -4,11 +4,12 @@ import json
 import csv
 import re
 import os
+from make_dir import create_dir
 
 
 #-------------------------------------------------------------------------------
 # Fill in this area
-csv_name = "nonsense.csv"
+csv_name = "nonsense"
 word_lst = ['Break', 'Rise', 'Have', 'Meet', 'Keep', 'Ring', 'Forget', 'Drink', 'Become']
 #-------------------------------------------------------------------------------
 unparsed = []
@@ -31,21 +32,25 @@ def normalize(phrase):
             str += x
         return str
 
+def main():
+    path = create_dir(csv_name)
+    with open(f'{path}/{csv_name}.csv', 'a') as file:
+        writer = csv.writer(file)
+        for word in word_lst:
+            query = word
+            url = 'https://www.dictionaryapi.com/api/v3/references/learners/json/' + word + '?key=' + app_key
 
-with open(csv_name, 'a') as file:
-    writer = csv.writer(file)
-    for word in word_lst:
-        query = word
-        url = 'https://www.dictionaryapi.com/api/v3/references/learners/json/' + word + '?key=' + app_key
+            try:
+                r = requests.get(url)
+                j = r.json()
+                definition = normalize(j[0]['meta']['app-shortdef']['def'][0])
+                pos = j[0]['meta']['app-shortdef']['fl']
+                writer.writerow([word, pos, definition])
 
-        try:
-            r = requests.get(url)
-            j = r.json()
-            definition = normalize(j[0]['meta']['app-shortdef']['def'][0])
-            pos = j[0]['meta']['app-shortdef']['fl']
-            writer.writerow([word, pos, definition])
+            except:
+                unparsed.append(word)
+    return unparsed
 
-        except:
-            unparsed.append(word)
-
-print(unparsed)
+if __name__ == "__main__":
+    unparsed = main()
+    print(unparsed)

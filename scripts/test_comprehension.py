@@ -1,7 +1,9 @@
 import pytest
 import os
 
-from bs4_to_csv import filter, make_dir
+from bs4_to_csv import filter
+from make_dir import create_dir
+
 
 def test_filter_ied():
     assert filter("tried") == "try"
@@ -39,8 +41,8 @@ def test_filter_unicode():
 def test_filter_keep2():
     assert filter("had") == "had"
 
-def test_make_dir():
+def test_create_dir():
     parent = os.path.dirname(os.getcwd())
     path = os.path.join(parent, "Adam")
-    assert make_dir("Adam") == path
+    assert create_dir("Adam") == path
     os.rmdir(path)
