@@ -81,8 +81,8 @@ def dict_to_csv(word_dic, filtered_word_dic, path):
     pd.DataFrame(filtered_series).to_csv(f'{path}/{name}_filtered.csv')
 
 if __name__ == "__main__":
-    #make_dir(name)
+    make_dir(name)
     path = make_dir(name)
-    print(path)
-    # word_dic, filtered_word_dic = create_dicts()
-    # dict_to_csv(word_dic, filtered_word_dic, path)
+    # print(path)
+    word_dic, filtered_word_dic = create_dicts()
+    dict_to_csv(word_dic, filtered_word_dic, path)
