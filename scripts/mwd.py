@@ -13,7 +13,7 @@ word_lst = ['Break', 'Rise', 'Have', 'Meet', 'Keep', 'Ring', 'Forget', 'Drink', 
 #-------------------------------------------------------------------------------
 unparsed = []
 cfg = configparser.ConfigParser()
-cfg.read('zipf.cfg')
+cfg.read('comprehension.cfg')
 
 app_key = cfg.get('KEYS', 'api_key', raw='')
 
