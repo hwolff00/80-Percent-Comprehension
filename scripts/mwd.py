@@ -17,7 +17,8 @@ cfg.read('comprehension.cfg')
 
 app_key = cfg.get('KEYS', 'api_key', raw='')
 
-def filter(phrase):
+def normalize(phrase):
+    "normalizes any messy json into a string"
     key = "([\d\w +-.''"",?!\(\):;]*){[\w/]*}([\d\w +-.''"",?!\(\);:]*)" #filter out extra unicode nonsence
     str_lst = re.findall(key, phrase)
 
@@ -40,7 +41,7 @@ with open(csv_name, 'a') as file:
         try:
             r = requests.get(url)
             j = r.json()
-            definition = filter(j[0]['meta']['app-shortdef']['def'][0])
+            definition = normalize(j[0]['meta']['app-shortdef']['def'][0])
             pos = j[0]['meta']['app-shortdef']['fl']
             writer.writerow([word, pos, definition])
 
