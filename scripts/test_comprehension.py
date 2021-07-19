@@ -3,6 +3,7 @@ import os
 
 from bs4_to_csv import filter
 from make_dir import create_dir
+from mwd import normalize
 
 
 def test_filter_ied():
@@ -46,3 +47,7 @@ def test_create_dir():
     path = os.path.join(parent, "Adam")
     assert create_dir("Adam") == path
     os.rmdir(path)
+
+def test_normalize():
+    phrase = "{bc}a round fruit with red, yellow, or green skin and firm white flesh "
+    assert normalize(phrase) == "a round fruit with red, yellow, or green skin and firm white flesh "

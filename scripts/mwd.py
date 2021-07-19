@@ -6,7 +6,6 @@ import re
 import os
 from make_dir import create_dir
 
-
 #-------------------------------------------------------------------------------
 # Fill in this area
 csv_name = "nonsense"
@@ -19,7 +18,7 @@ cfg.read('comprehension.cfg')
 app_key = cfg.get('KEYS', 'api_key', raw='')
 
 def normalize(phrase):
-    "normalizes any messy json into a string"
+    """normalizes any messy json into a string"""
     key = "([\d\w +-.''"",?!\(\):;]*){[\w/]*}([\d\w +-.''"",?!\(\);:]*)" #filter out extra unicode nonsence
     str_lst = re.findall(key, phrase)
 
@@ -33,6 +32,7 @@ def normalize(phrase):
         return str
 
 def main():
+    """Turns json blobs into vocab csv files, else returns unparsed words in a list"""
     path = create_dir(csv_name)
     with open(f'{path}/{csv_name}.csv', 'a') as file:
         writer = csv.writer(file)
