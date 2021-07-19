@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+"""A script to scrape a html book text and turn them into a filtered csv word frequency file
+and an unfiltered csv word frequency file (to be used later for analysis)"""
 
 import requests
 from bs4 import BeautifulSoup
@@ -16,6 +18,8 @@ name = "Jane"
 #-------------------------------------------------------------------------------
 def spacy_filter(word):
     """Uses spacy to find lemmas of verbs and roots of aux verbs"""
+    if word.endswith('â') or word.endswith('Â'):
+        return word[:-1]
     doc = nlp(word)
     for token in doc:
         if token.pos_ == "VERB":
@@ -28,14 +32,19 @@ def spacy_filter(word):
 
 def filter(word):
     """Extra filtering to deal with beginning of sentances, filtering of names, and unicode"""
+    word = str(word)
     if word in ["a", "A", "I", "O", 'The', "Then", "It", "He", "She", "They", "And", "When", "If", "That", "Who", "What", "When", "Where", "Why", "How"]:
         return word
     elif word == word.capitalize() or word == word.upper():
         return ""
+    elif word.endswith("s") and not word.endswith("as") and not word.endswith("is") and not word.endswith("ys") and not word.endswith("es") and not word.endswith("ss") and not word.endswith("us") and not word.endswith("os"):
+        return word[:-1]
+    elif word.endswith("dn"):
+        return word[:-1]
+    elif word.endswith("dn'"):
+        return word[:-2]
     elif len(word) == 1:
         return ""
-    elif word.endswith('â') or word.endswith('Â'):
-        return word[:-1]
     else:
         return word
 
@@ -43,21 +52,20 @@ def filter(word):
 def create_dicts():
     source = requests.get(web_address).text
     soup = BeautifulSoup(source, "lxml")
-
     matches = soup.find_all('p')
 
     word_dic = {}
     filtered_word_dic = {}
     word_lst = []
+
     for match in matches:
         #print(tag)
         m = match.text
-        word_lst = re.findall("[\w]+", m) #creates filtered word dicionary
+        word_lst = re.findall(r"[\w]+", m) #creates filtered word dicionary
         for word in word_lst:
             word = word.replace("-_;:", "").strip()
             filtered_word = spacy_filter(word)
-            filtered_word = str(filtered_word)
-            filtered_word = filtered_word.capitalize()
+            filtered_word = str(filtered_word).capitalize()
             if filtered_word == "":
                 continue
             filtered_word_dic[filtered_word] = filtered_word_dic.get(filtered_word, 0) + 1

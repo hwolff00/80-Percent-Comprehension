@@ -1,46 +1,46 @@
 import pytest
 import os
 
-from bs4_to_csv import filter
+from bs4_to_csv import filter, spacy_filter
 from make_dir import create_dir
 from mwd import normalize
 
 
-def test_filter_ied():
-    assert filter("tried") == "try"
+def test_spacy_dn():
+    assert str(spacy_filter("hadn")) == "had"
 
-def test_filter_empty():
-    assert filter("") == ""
+def test_spacy_nt():
+    assert str(spacy_filter("wouldn't")) == "would"
 
-def test_filter_Starter():
-    assert filter("A") == "A"
-
-def test_filter_Name():
-    assert filter("Anna") == ""
-
-def test_filter_dn():
-    assert filter("hadn") == "had"
-
-def test_filter_nt():
-    assert filter("wouldn't") == "would"
-
-def test_filter_dn2():
-    assert filter("hadn'") == "had"
-
-def test_filter_filtered():
-    assert filter("pass") == "pass"
-
-def test_filter_plural():
-    assert filter("cans") == "can"
+def test_spacy_dn2():
+    assert str(spacy_filter("hadn'")) == "had"
 
 def test_filter_ve():
-    assert filter("could've") == "could"
+    assert str(spacy_filter("could've")) == "could"
+
+def test_filter_empty():
+    assert spacy_filter("") == None
+
+def test_filter_starter():
+    assert str(spacy_filter("A")) == "A"
+
+def test_filter_Name():
+    assert str(spacy_filter("Anna")) == ""
+
+def test_filter_filtered():
+    assert str(spacy_filter("pass")) == "pass"
+
+def test_filter_plural():
+    assert str(spacy_filter("cans")) == "can"
 
 def test_filter_unicode():
-    assert filter("askâ") == "ask"
+    assert spacy_filter("askâ") == "ask"
+
+def test_filter_plural():
+    assert str(spacy_filter("cans")) == "can"
 
 def test_filter_keep2():
-    assert filter("had") == "had"
+    assert str(spacy_filter("had")) == "have"
 
 def test_create_dir():
     parent = os.path.dirname(os.getcwd())
