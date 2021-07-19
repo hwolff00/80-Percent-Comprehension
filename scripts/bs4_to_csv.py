@@ -10,10 +10,8 @@ import os
 # Fill in this section
 web_address = "https://www.gutenberg.org/files/1260/1260-h/1260-h.htm"
 name = "Jane"
-# unfilted_csv = "Jane.csv"
-# filted_csv = "Jane_filtered.csv"
 #-------------------------------------------------------------------------------
-def make_dir():
+def make_dir(name):
     parent = os.path.dirname(os.getcwd())
     path = os.path.join(parent, name)
     if not os.path.exists(path):
@@ -83,8 +81,8 @@ def dict_to_csv(word_dic, filtered_word_dic, path):
     pd.DataFrame(filtered_series).to_csv(f'{path}/{name}_filtered.csv')
 
 if __name__ == "__main__":
-    make_dir()
-    path = make_dir()
+    #make_dir(name)
+    path = make_dir(name)
     print(path)
-    word_dic, filtered_word_dic = create_dicts()
-    dict_to_csv(word_dic, filtered_word_dic, path)
+    # word_dic, filtered_word_dic = create_dicts()
+    # dict_to_csv(word_dic, filtered_word_dic, path)
