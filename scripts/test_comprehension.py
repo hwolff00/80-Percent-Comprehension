@@ -22,7 +22,10 @@ def test_filter_empty():
     assert spacy_filter("") == None
 
 def test_filter_starter():
-    assert str(spacy_filter("A")) == "A"
+    assert str(spacy_filter("A")) == "a"
+
+def test_filter_plural2():
+    assert str(spacy_filter("companies")) == "company"
 
 def test_filter_Name():
     assert str(spacy_filter("Anna")) == ""

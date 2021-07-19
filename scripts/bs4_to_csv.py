@@ -17,13 +17,16 @@ web_address = "https://www.gutenberg.org/files/1260/1260-h/1260-h.htm"
 name = "Jane"
 #-------------------------------------------------------------------------------
 def spacy_filter(word):
-    """Uses spacy to find lemmas of verbs and roots of aux verbs"""
+    """Uses spacy to find lemmas of verbs and nouns and roots of aux verbs"""
     if word.endswith('â') or word.endswith('Â'):
         return word[:-1]
     doc = nlp(word)
     for token in doc:
         if token.pos_ == "VERB":
             return token.lemma_
+        elif token.pos_ == "NNS" or "NNPS":
+            word = token.lemma_
+            return filter(word) #extra filtering required to get rid of names/places
         elif token.pos_ == "AUX":
             aux_lst = [token for token in doc if token.pos_ == "AUX"]
             return aux_lst[0]
@@ -37,8 +40,6 @@ def filter(word):
         return word
     elif word == word.capitalize() or word == word.upper():
         return ""
-    elif word.endswith("s") and not word.endswith("as") and not word.endswith("is") and not word.endswith("ys") and not word.endswith("es") and not word.endswith("ss") and not word.endswith("us") and not word.endswith("os"):
-        return word[:-1]
     elif word.endswith("dn"):
         return word[:-1]
     elif word.endswith("dn'"):
