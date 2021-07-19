@@ -6,33 +6,34 @@ import re
 import pandas as pd
 import os
 from make_dir import create_dir
+import spacy
 
+nlp = spacy.load("en_core_web_sm")
 #-------------------------------------------------------------------------------
 # Fill in this section
 web_address = "https://www.gutenberg.org/files/1260/1260-h/1260-h.htm"
 name = "Jane"
 #-------------------------------------------------------------------------------
+def spacy_filter(word):
+    """Uses spacy to find lemmas of verbs and roots of aux verbs"""
+    doc = nlp(word)
+    for token in doc:
+        if token.pos_ == "VERB":
+            return token.lemma_
+        elif token.pos_ == "AUX":
+            aux_lst = [token for token in doc if token.pos_ == "AUX"]
+            return aux_lst[0]
+        else:
+            return filter(word)
 
 def filter(word):
-    if word.endswith('ies') or word.endswith('ied'):
-        word = word[:-3]+ "y"
-        return word
-    elif word in ["a", "A", "I", "O", 'The', "Then", "It", "He", "She", "They", "And", "When", "If", "That", "Who", "What", "When", "Where", "Why", "How"]:
+    """Extra filtering to deal with beginning of sentances, filtering of names, and unicode"""
+    if word in ["a", "A", "I", "O", 'The', "Then", "It", "He", "She", "They", "And", "When", "If", "That", "Who", "What", "When", "Where", "Why", "How"]:
         return word
     elif word == word.capitalize() or word == word.upper():
         return ""
     elif len(word) == 1:
         return ""
-    elif word.endswith("dn"):
-        return word[:-1]
-    elif word.endswith("n't"):
-        return word[:-3]
-    elif word.endswith("n'"):
-        return word[:-2]
-    elif word.endswith("s") and not word.endswith("as") and not word.endswith("is") and not word.endswith("ys") and not word.endswith("es") and not word.endswith("ss") and not word.endswith("us") and not word.endswith("os"):
-        return word[:-1]
-    elif word.endswith("d've"):
-        return word[:-3]
     elif word.endswith('â') or word.endswith('Â'):
         return word[:-1]
     else:
@@ -54,7 +55,8 @@ def create_dicts():
         word_lst = re.findall("[\w]+", m) #creates filtered word dicionary
         for word in word_lst:
             word = word.replace("-_;:", "").strip()
-            filtered_word = filter(word)
+            filtered_word = spacy_filter(word)
+            filtered_word = str(filtered_word)
             filtered_word = filtered_word.capitalize()
             if filtered_word == "":
                 continue
