@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""A script to scrape a html book text and turn them into a filtered csv word frequency file
-and an unfiltered csv word frequency file (to be used later for analysis)"""
+"""A script to scrape a html book text and turn it into a filtered csv word frequency file
+and an unfiltered csv word frequency file (for later analysis)"""
 
 import requests
 from bs4 import BeautifulSoup
@@ -34,9 +34,11 @@ def spacy_filter(word):
             return filter(word)
 
 def filter(word):
-    """Extra filtering to deal with beginning of sentances, filtering of names, and unicode"""
+    """Extra filtering to deal with beginning of sentances, filtering of names,
+        and other parsing issues"""
     word = str(word)
-    if word in ["a", "A", "I", "O", 'The', "Then", "It", "He", "She", "They", "And", "When", "If", "That", "Who", "What", "When", "Where", "Why", "How"]:
+    if word in ["a", "A", "I", "O", 'The', "Then", "It", "He", "She", "They",
+        "And", "When", "If", "That", "Who", "What", "When", "Where", "Why", "How"]:
         return word
     elif word == word.capitalize() or word == word.upper():
         return ""
@@ -49,8 +51,8 @@ def filter(word):
     else:
         return word
 
-# Uses requests to read the html and beautiful soup to parse it
 def create_dicts():
+    """Main function: reads html, parses text, filters, and stores in 2 dictionaries"""
     source = requests.get(web_address).text
     soup = BeautifulSoup(source, "lxml")
     matches = soup.find_all('p')
@@ -81,6 +83,7 @@ def create_dicts():
     return word_dic, filtered_word_dic
 
 def dict_to_csv(word_dic, filtered_word_dic, path):
+    """Converts dictionaries to csv files"""
     series = pd.Series(word_dic).to_frame()
     pd.DataFrame(series).to_csv(f'{path}/{name}.csv')
     filtered_series = pd.Series(filtered_word_dic).to_frame()
