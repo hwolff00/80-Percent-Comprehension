@@ -19,7 +19,7 @@ app_key = cfg.get('KEYS', 'api_key', raw='')
 
 def normalize(phrase):
     """normalizes any messy json into a string"""
-    key = "([\d\w +-.''"",?!\(\):;]*){[\w/]*}([\d\w +-.''"",?!\(\);:]*)" #filter out extra unicode nonsence
+    key = r"([\d\w +-.''"",?!\(\):;]*){[\w/]*}([\d\w +-.''"",?!\(\);:]*)" #filter out extra unicode nonsence
     str_lst = re.findall(key, phrase)
 
     if str_lst == []:
