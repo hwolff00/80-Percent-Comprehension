@@ -1,6 +1,6 @@
 import pandas as pd
 
-word_dic={}
+word_dic = {}
 
 
 def main():
@@ -13,6 +13,7 @@ def main():
 
     series = pd.Series(word_dic).to_frame()
     pd.DataFrame(series).to_csv('n_gram.csv')
+
 
 if __name__ == "__main__":
     main()

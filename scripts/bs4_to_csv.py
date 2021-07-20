@@ -16,6 +16,8 @@ nlp = spacy.load("en_core_web_sm")
 web_address = "https://www.gutenberg.org/files/1260/1260-h/1260-h.htm"
 name = "Jane"
 #-------------------------------------------------------------------------------
+# TODO look into the use of data structures here -- too many lists?
+# What can be refactored for a speed up (use of generator?)
 def spacy_filter(word):
     """Uses spacy to find lemmas of verbs and nouns and roots of aux verbs"""
     if word.endswith('â') or word.endswith('Â'):

@@ -2,14 +2,15 @@ import genanki
 import random
 import csv
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Fill out this section
 file = "DDIA.csv"
 deck_name = "DDIA"
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Create unique ID for deck
 deck_id = random.randrange(1 << 30, 1 << 31)
+
 
 def main():
     ct = 1
@@ -21,7 +22,7 @@ def main():
     with open(file, newline='') as csvfile:
         line = csv.reader(csvfile, quotechar='|')
         for line in csvfile:
-            lis= line.split(",")
+            lis = line.split(",")
             word = lis[0]
             pos = lis[1]
             definition = lis[2]
@@ -51,6 +52,7 @@ def main():
             ct += 1
 
     genanki.Package(my_deck).write_to_file('{}.apkg'.format(deck_name))
+
 
 if __name__ == "__main__":
     main()

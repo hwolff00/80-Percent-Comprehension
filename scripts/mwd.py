@@ -1,25 +1,26 @@
 import configparser
 import requests
-import json
 import csv
 import re
-import os
 from make_dir import create_dir
 
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Fill in this area
 csv_name = "nonsense"
-word_lst = ['Break', 'Rise', 'Have', 'Meet', 'Keep', 'Ring', 'Forget', 'Drink', 'Become']
-#-------------------------------------------------------------------------------
+word_lst = ['Break', 'Rise', 'Have', 'Meet', 'Keep', 'Ring', 'Forget', 'Drink',
+            'Become']
+# ------------------------------------------------------------------------------
 unparsed = []
 cfg = configparser.ConfigParser()
 cfg.read('comprehension.cfg')
 
 app_key = cfg.get('KEYS', 'api_key', raw='')
 
+
 def normalize(phrase):
-    """normalizes any messy json into a string"""
-    key = r"([\d\w +-.''"",?!\(\):;]*){[\w/]*}([\d\w +-.''"",?!\(\);:]*)" #filter out extra unicode nonsence
+    """normalizes messy json definition into a string"""
+    # Filter out extra unicode nonsense
+    key = r"([\d\w +-.''"",?!\(\):;]*){[\w/]*}([\d\w +-.''"",?!\(\);:]*)"
     str_lst = re.findall(key, phrase)
 
     if str_lst == []:
@@ -31,13 +32,13 @@ def normalize(phrase):
             str += x
         return str
 
+
 def main():
-    """Turns json blobs into vocab csv files, else returns unparsed words in a list"""
+    """Json into vocab csv files, else returns unparsed words in a list"""
     path = create_dir(csv_name)
     with open(f'{path}/{csv_name}.csv', 'a') as file:
         writer = csv.writer(file)
         for word in word_lst:
-            query = word
             url = 'https://www.dictionaryapi.com/api/v3/references/learners/json/' + word + '?key=' + app_key
 
             try:
@@ -50,6 +51,7 @@ def main():
             except:
                 unparsed.append(word)
     return unparsed
+
 
 if __name__ == "__main__":
     unparsed = main()
