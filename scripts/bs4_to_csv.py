@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""A script to scrape a html book text and turn it into a filtered csv word frequency file
-and an unfiltered csv word frequency file (for later analysis)"""
+"""Scrapes a html book text and turn it into a filtered csv word frequency file
+and an unfiltered csv word frequency file (for later analysis)."""
 
 import requests
 from bs4 import BeautifulSoup
@@ -11,15 +11,17 @@ from make_dir import create_dir
 import spacy
 
 nlp = spacy.load("en_core_web_sm")
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Fill in this section
 web_address = "https://www.gutenberg.org/files/1260/1260-h/1260-h.htm"
 name = "Jane"
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # TODO look into the use of data structures here -- too many lists?
 # What can be refactored for a speed up (use of generator?)
+
+
 def spacy_filter(word):
-    """Uses spacy to find lemmas of verbs and nouns and roots of aux verbs"""
+    """Uses spacy to find lemmas of verbs and nouns and roots of aux verbs."""
     if word.endswith('â') or word.endswith('Â'):
         return word[:-1]
     doc = nlp(word)
@@ -28,19 +30,21 @@ def spacy_filter(word):
             return token.lemma_
         elif token.pos_ == "NNS" or "NNPS":
             word = token.lemma_
-            return filter(word) #extra filtering required to get rid of names/places
+            return filter(word)  # extra filtering to get rid of names/places
         elif token.pos_ == "AUX":
             aux_lst = [token for token in doc if token.pos_ == "AUX"]
             return aux_lst[0]
         else:
             return filter(word)
 
+
 def filter(word):
     """Extra filtering to deal with beginning of sentances, filtering of names,
-        and other parsing issues"""
+        and other parsing issues."""
     word = str(word)
     if word in ["a", "A", "I", "O", 'The', "Then", "It", "He", "She", "They",
-        "And", "When", "If", "That", "Who", "What", "When", "Where", "Why", "How"]:
+                "And", "When", "If", "That", "Who", "What", "When", "Where",
+                "Why", "How"]:
         return word
     elif word == word.capitalize() or word == word.upper():
         return ""
@@ -53,8 +57,9 @@ def filter(word):
     else:
         return word
 
+
 def create_dicts():
-    """Main function: reads html, parses text, filters, and stores in 2 dictionaries"""
+    """Reads html, parses text, filters, and stores in 2 dictionaries."""
     source = requests.get(web_address).text
     soup = BeautifulSoup(source, "lxml")
     matches = soup.find_all('p')
@@ -64,9 +69,9 @@ def create_dicts():
     word_lst = []
 
     for match in matches:
-        #print(tag)
+        # print(tag)
         m = match.text
-        word_lst = re.findall(r"[\w]+", m) #creates filtered word dicionary
+        word_lst = re.findall(r"[\w]+", m)  # Creates filtered word dicionary
         for word in word_lst:
             word = word.replace("-_;:", "").strip()
             filtered_word = spacy_filter(word)
@@ -75,7 +80,7 @@ def create_dicts():
                 continue
             filtered_word_dic[filtered_word] = filtered_word_dic.get(filtered_word, 0) + 1
 
-        for word in word_lst: #creates unfiltered word dictionary
+        for word in word_lst:  # Creates unfiltered word dictionary
             word = word.replace("-_;:", "").strip()
             word = word.capitalize()
             if word == "" or word.endswith('Â'):
@@ -84,12 +89,14 @@ def create_dicts():
 
     return word_dic, filtered_word_dic
 
+
 def dict_to_csv(word_dic, filtered_word_dic, path):
     """Converts dictionaries to csv files"""
     series = pd.Series(word_dic).to_frame()
     pd.DataFrame(series).to_csv(f'{path}/{name}.csv')
     filtered_series = pd.Series(filtered_word_dic).to_frame()
     pd.DataFrame(filtered_series).to_csv(f'{path}/{name}_filtered.csv')
+
 
 if __name__ == "__main__":
     create_dir(name)
